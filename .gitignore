@@ -62,6 +62,9 @@ MANIFEST-*
 # Jupyter
 .ipydb*/
 
+# Visual Studio Code
+.vscode/
+
 ######################### Windows (Visual Studio) Files #########################
 *.db
 *.deps
