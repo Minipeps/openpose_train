@@ -103,7 +103,7 @@ def setLayersTwoBranches(#dataFolders,
     assert len(layerName) == len(kernel)
     assert len(layerName) == len(stride)
     assert len(layerName) == len(numberOutputChannels)
-    numberTotalParts = numberKeyPoints + noBodyParts + numberPAFs + noBodyPAFs
+    numberTotalParts = numberKeyPoints + noBodyParts + numberPAFs + noBodyPAFs # Pig: 13 = 5 + 0 + 8 + 0
 
     # Testing/deployment mode
     if deploy:
@@ -172,6 +172,7 @@ def setLayersTwoBranches(#dataFolders,
             )
         # Without distance
         else:
+            print [numberPAFs+noBodyPAFs, numberTotalParts+1*addBkgChannel, numberTotalParts+numberPAFs+noBodyPAFs+1*addBkgChannel]
             caffeNet.tops[sLabelName[sLNSize+1]+temp], caffeNet.tops[sLabelName[sLNSize]+temp], caffeNet.tops[sLabelName[2*sLNSize+1]+temp], caffeNet.tops[sLabelName[2*sLNSize]+temp] = L.Slice(
                 caffeNet.label,
                 slice_param=dict(axis=1, slice_point=[numberPAFs+noBodyPAFs, numberTotalParts+1*addBkgChannel, numberTotalParts+numberPAFs+noBodyPAFs+1*addBkgChannel]), # For foot, also enable below code

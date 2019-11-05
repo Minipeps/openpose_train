@@ -1,5 +1,6 @@
 import json
 import tqdm
+import cv2
 
 ### Begin Definitions ###
 
@@ -7,7 +8,17 @@ def fixPathName(pathName):
     ''' "123 .jpg" -> "123.jpg" '''
     return ''.join(pathName.split(' '))
 
+def getObjPos(keypoints):
+    tail = keypoints[-1]
+    nose = keypoints[-2]
+
+    return [ (nose[0] + tail[0]) / 2, (nose[1] + tail[1]) / 2 ]
+
 ### End Definitions ###
+
+datasetFolder = "/home/maxime/Documents/openpose_train/dataset/PigData/"
+exportFolder = datasetFolder + "pig21/"
+imagesFolder = datasetFolder + "duroc_6stk/RGB/"
 
 raw = "annotations.json"
 fixed = "annotations_fixed.json"
@@ -57,7 +68,18 @@ print modified, "annotations modified"
 if modified > 0:
     print "New fixed data length:", len([x for x in dataFixed if x != []])
 
+# Completing annotations format
+dataFinal = [x for x in dataFixed if x != []]
+for i in range(len(dataFinal)):
+    numOtherPeople = dataFinal[i]["numOtherPeople"]
+    dataFinal[i]["people_index"] = 0
+    dataFinal[i]["annolist_index"] = 0
+    dataFinal[i]["objpos"] = getObjPos(dataFinal[i]["joint_self"])
+    dataFinal[i]["scale_provided"] = 1
+
+    dataFinal[i]["objpos_other"] = [ getObjPos(dataFinal[i]["joint_others"][j]) for j in range(numOtherPeople) ]
+    dataFinal[i]["scale_provided_other"] = [ 1 for j in range(numOtherPeople) ]
+
 with open(final, 'w+') as finalFile:
-    dataFinal = [x for x in dataFixed if x != []]
     json.dump(dataFinal, finalFile)
     finalFile.close()

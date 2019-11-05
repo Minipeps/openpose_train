@@ -45,7 +45,6 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
             or isBodyMpii \
             or "panoptics" in jsonData[index]['dataset'] \
             or "car14" in jsonData[index]['dataset'] \
-            or "pig" in jsonData[index]['dataset'] \
             or "car22" in jsonData[index]['dataset']:
             if "COCO" in jsonData[index]['dataset'] or isBodyMpii or "car22" in jsonData[index]['dataset']:
                 if not maskFolder:
@@ -53,26 +52,26 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
                 # Car22
                 if isBodyMpii or "car22" in jsonData[index]['dataset']:
                     if isBodyMpii:
-                        imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths'])
+                        imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths']);
                     else:
                         imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths'][1:])
-                    maskFileName = os.path.splitext(os.path.split(jsonData[index]['img_paths'])[1])[0]
+                    maskFileName = os.path.splitext(os.path.split(jsonData[index]['img_paths'])[1])[0];
                     maskMissFullPath = maskFolder + maskFileName + '.png'
                 else:
-                    imageIndex = jsonData[index]['img_paths'][-16:-4]
+                    imageIndex = jsonData[index]['img_paths'][-16:-4];
                     # COCO 2014 (e.g. foot)
                     if "2014/COCO_" in jsonData[index]['img_paths']:
                         if "train2014" in jsonData[index]['img_paths']:
-                            kindOfData = 'train2014'
+                            kindOfData = 'train2014';
                         else:
-                            kindOfData = 'val2014'
-                        imageFullPath = os.path.join(imagesFolder, 'train2017', imageIndex + '.jpg')
+                            kindOfData = 'val2014';
+                        imageFullPath = os.path.join(imagesFolder, 'train2017', imageIndex + '.jpg');
                         kindOfMask = 'mask2014'
                         maskMissFullPath = maskFolder + 'mask2014/' + kindOfData + '_mask_miss_' + imageIndex + '.png'
                     # COCO 2017
                     else:
-                        kindOfData = 'train2017'
-                        imageFullPath = os.path.join(imagesFolder, kindOfData + '/' + jsonData[index]['img_paths'])
+                        kindOfData = 'train2017';
+                        imageFullPath = os.path.join(imagesFolder, kindOfData + '/' + jsonData[index]['img_paths']);
                         kindOfMask = 'mask2017'
                         maskMissFullPath = maskFolder + kindOfMask + '/' + kindOfData + '/' + imageIndex + '.png'
                 # Read image and maskMiss
@@ -82,9 +81,9 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
                 if not os.path.exists(maskMissFullPath):
                     raise Exception('Not found image: ' + maskMissFullPath)
                 maskMiss = cv2.imread(maskMissFullPath, 0) # 0 = Load grayscale image
-            # MPII or car14 or Pig
+            # MPII or car14
             else:
-                imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths'])
+                imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths']);
                 image = cv2.imread(imageFullPath)
                 # # Debug - Display image
                 # print(imageFullPath)
@@ -123,7 +122,6 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
             or "mpii-hand" in jsonData[index]['dataset'] \
             or "panoptics" in jsonData[index]['dataset'] \
             or "car14" in jsonData[index]['dataset'] \
-            or "pig" in jsonData[index]['dataset'] \
             or "car22" in jsonData[index]['dataset']:
             try:
                 height = image.shape[0]
@@ -210,8 +208,7 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
                 or "hand21" in jsonData[index]['dataset'] \
                 or "hand42" in jsonData[index]['dataset'] \
                 or "MPII_hand" in jsonData[index]['dataset'] \
-                or "car14" in jsonData[index]['dataset'] \
-                or "pig" in jsonData[index]['dataset']:
+                or "car14" in jsonData[index]['dataset']:
                 jointOthers = jsonData[index]['joint_others']
                 objposOther = jsonData[index]['objpos_other']
                 scaleProvidedOther = jsonData[index]['scale_provided_other']
@@ -274,8 +271,7 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
             or "MPII_hand" in jsonData[index]['dataset'] \
             or "mpii-hand" in jsonData[index]['dataset'] \
             or "panoptics" in jsonData[index]['dataset'] \
-            or "car14" in jsonData[index]['dataset'] \
-            or "pig" in jsonData[index]['dataset']:
+            or "car14" in jsonData[index]['dataset']:
             dataToSave = np.concatenate((image, metaData), axis=2)
             dataToSave = np.transpose(dataToSave, (2, 0, 1))
         elif "dome" in jsonData[index]['dataset']:
@@ -315,6 +311,7 @@ def generateNegativesLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath)
     printEveryXIterations = max(1, round(totalWriteCount / 100))
 
     for numberSample in range(totalWriteCount):
+        index = randomOrder[numberSample]
         if numberSample % printEveryXIterations == 0:
             print('Sample %d of %d' % (numberSample+1, totalWriteCount))
         # Read image
