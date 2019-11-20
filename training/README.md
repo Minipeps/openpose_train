@@ -55,7 +55,7 @@ Depending on the kind of model you are trying to learn, use the following traini
                 5. Run `python c_generateLmdbs.py` again to generate the MPII LMDB.
 2. Train model:
     - a) Download and compile our modified Caffe:
-        - OpenPose Caffe Training: [github.com/CMU-Perceptual-Computing-Lab/openpose_caffe_train](https://github.com/CMU-Perceptual-Computing-Lab/openpose_caffe_train).
+        - OpenPose Caffe Training: [github.com/Minipeps/openpose_caffe_train](https://github.com/Minipeps/openpose_caffe_train).
         - Compile it by running: `make all -j{num_cores} && make pycaffe -j{num_cores}`.
     - b) Generate the Caffe ProtoTxt and shell file for training by running `python d_setLayers.py`.
         - Set `sCaffeFolder` to the path of [OpenPose Caffe Train with PIG_5 model](https://github.com/Minipeps/openpose_caffe_train).
