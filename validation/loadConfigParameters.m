@@ -5,7 +5,7 @@
 
 % Path parameters
 % Caffe
-sCaffePath = '/home/gines/devel/caffe_train/matlab/';
+sCaffePath = 'home/gines/devel/caffe_train/matlab/';
 sNumberGpus = 4;
 sNumberGpusStart = 0;
 % COCO

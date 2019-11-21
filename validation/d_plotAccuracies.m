@@ -8,24 +8,27 @@ tic
 % OpenPose model names
 modelSequences = {
     % 25B
-    {'1_25BBkg', 'body_25b', '4'};
+    % {'1_25BBkg', 'body_25b', '4'};
 %     {'100_25BBig', 'body_25b', '4'};
 %     {'6_25BSuperModel2', 'body_25b', '4'};
-    {'2_25BSuperModel', 'body_25b', '4'}; % Used ICCV
-    {'5_25BSuperModel31DeepAndHM', 'body_25b', '4'}; % Used ICCV
-    {'5_25BSuperModel41', 'body_25b', '4'}; % Used ICCV
-    {'1_25BSuperModel31PreDCConcat', 'body_25b', '4'}; % Used ICCV
-    {'2_25BSuperModel21FullVGG', 'body_25b', '4'}; % Used ICCV
+    % {'2_25BSuperModel', 'body_25b', '4'}; % Used ICCV
+    % {'5_25BSuperModel31DeepAndHM', 'body_25b', '4'}; % Used ICCV
+    % {'5_25BSuperModel41', 'body_25b', '4'}; % Used ICCV
+    % {'1_25BSuperModel31PreDCConcat', 'body_25b', '4'}; % Used ICCV
+    % {'2_25BSuperModel21FullVGG', 'body_25b', '4'}; % Used ICCV
     % 135
-    {'1_135NewTrainTest', 'body_135', '14'};
-    {'100_135Big', 'body_135', '14'};
-    {'100_135BigMoreBody2', 'body_135', '14'};
-    {'100_135AlmostSameBatchAllGPUs', 'body_135', '14'};
+    % {'1_135NewTrainTest', 'body_135', '14'};
+    % {'100_135Big', 'body_135', '14'};
+    % {'100_135BigMoreBody2', 'body_135', '14'};
+    % {'100_135AlmostSameBatchAllGPUs', 'body_135', '14'};
 %     % Car-based
 %     {'2_22car', 'car_22'};
 %     ...
 %     % Car-based (old)
 %     {'1_12CarV1', 'car_12'};
+    % ...
+      % Pig
+      {'pig5_v3', 'pig_5'};
 %     ...
 %     % V100-based
 %     {'0_25In624FineTune', 'body_25'};
@@ -84,6 +87,10 @@ subFoldersCar = {
 %     'scaleV7_4/';
 };
 
+subFoldersPig = {
+    'scale_1';
+};
+
 %% Default paths
 loadConfigParameters
 % COCO API path
@@ -92,7 +99,8 @@ addpath(sCocoMatlabApiFolder)
 addpath('../matlab_utilities') % printToc
 addpath('../matlab_utilities/sort_nat')
 % JSON ground truth folder
-groundTruthDir = '../dataset/COCO/cocoapi/';
+% groundTruthDir = '../dataset/COCO/cocoapi/';
+groundTruthDir = '../dataset/PigData/';
 jsonFolder = '../training_results/';
 
 %% select results type for demo (either bbox or segm)
@@ -104,37 +112,42 @@ prefix='instances';
 if(strcmp(type,'keypoints')), prefix='person_keypoints'; end
 
 % Get average precision and recall best OP models
-% Body
-annFile=sprintf('%s/annotations/%s_%s.json',groundTruthDir,prefix,dataType);
-cocoGt = CocoApi(annFile);
-% Foot
-% (Re)initialize COCO ground truth api
-annFile=sprintf('%s/annotations/%s_%s%s.json',groundTruthDir,prefix,dataType, '_foot');
-cocoGtFoot = CocoApi(annFile);
-% Face
-% (Re)initialize COCO ground truth api
-annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'frgc_val');
-cocoGtFrgc = CocoApi(annFile);
-annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'multipie_val');
-cocoGtMpie = CocoApi(annFile);
-annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'face_mask_out_val');
-cocoGtFaceMask = CocoApi(annFile);
-% Hand
-% (Re)initialize COCO ground truth api
-annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'hand21_dome_val');
-cocoGtHandDome = CocoApi(annFile);
-annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'hand42_mpii_val');
-cocoGtHandMPII = CocoApi(annFile);
+% % Body
+% annFile=sprintf('%s/annotations/%s_%s.json',groundTruthDir,prefix,dataType);
+% cocoGt = CocoApi(annFile);
+% % Foot
+% % (Re)initialize COCO ground truth api
+% annFile=sprintf('%s/annotations/%s_%s%s.json',groundTruthDir,prefix,dataType, '_foot');
+% cocoGtFoot = CocoApi(annFile);
+% % Face
+% % (Re)initialize COCO ground truth api
+% annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'frgc_val');
+% cocoGtFrgc = CocoApi(annFile);
+% annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'multipie_val');
+% cocoGtMpie = CocoApi(annFile);
+% annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'face_mask_out_val');
+% cocoGtFaceMask = CocoApi(annFile);
+% % Hand
+% % (Re)initialize COCO ground truth api
+% annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'hand21_dome_val');
+% cocoGtHandDome = CocoApi(annFile);
+% annFile = sprintf('%s/annotations/%s.json',groundTruthDir,'hand42_mpii_val');
+% cocoGtHandMPII = CocoApi(annFile);
 
-% % Car
-% annFile=sprintf('%s/annotations/%s_%s%s.json',groundTruthDir,prefix,dataType, '_car');
-% cocoGtCar = CocoApi(annFile);
-annFile=sprintf('%s/annotations/%s.json',groundTruthDir,'processed_carfusion_val_cocoapi');
-cocoGtCarCF = CocoApi(annFile);
-annFile=sprintf('%s/annotations/%s.json',groundTruthDir,'processed_pascal3dplus_val_cocoapi');
-cocoGtCarP3 = CocoApi(annFile);
-annFile=sprintf('%s/annotations/%s.json',groundTruthDir,'processed_veri776_val_cocoapi');
-cocoGtCarV7 = CocoApi(annFile);
+% % % Car
+% % annFile=sprintf('%s/annotations/%s_%s%s.json',groundTruthDir,prefix,dataType, '_car');
+% % cocoGtCar = CocoApi(annFile);
+% annFile=sprintf('%s/annotations/%s.json',groundTruthDir,'processed_carfusion_val_cocoapi');
+% cocoGtCarCF = CocoApi(annFile);
+% annFile=sprintf('%s/annotations/%s.json',groundTruthDir,'processed_pascal3dplus_val_cocoapi');
+% cocoGtCarP3 = CocoApi(annFile);
+% annFile=sprintf('%s/annotations/%s.json',groundTruthDir,'processed_veri776_val_cocoapi');
+% cocoGtCarV7 = CocoApi(annFile);
+
+% Pig
+annFile=sprintf('%s/%s.json',groundTruthDir,'annotations_final_v3');
+cocoPig = CocoApi(annFile);
+
 % Top scores
 avgPrecAndRecallOP1 = getPrecisionAndRecall({[jsonFolder, 'OP_1.json']}, cocoGt, type);
 avgPrecAndRecallOP4 = getPrecisionAndRecall({[jsonFolder, 'OP_4.json']}, cocoGt, type);
@@ -151,6 +164,7 @@ avgPrecAndRecallOP1Hand42 = getPrecisionAndRecall({[jsonFolder, 'OP_1_hand42.jso
 for modelIndex = 1:numel(modelSequences)
     modelString = modelSequences{modelIndex}{2};
     isCar = (sum(modelString(1:3) == 'car') == 3);
+    isPig = (sum(modelString(1:3) == 'pig') == 3);
     modelSequence = modelSequences{modelIndex}{1};
     openPoseModel = modelSequences{modelIndex}{2};
     if ~isCar
@@ -158,6 +172,9 @@ for modelIndex = 1:numel(modelSequences)
         subFolders = subFoldersPerson(1:numberPlots);
     else
         subFolders = subFoldersCar;
+    end
+    if isPig
+        subFolders = subFoldersPig;
     end
 
     avgPrecAndRecall = cell(numel(subFolders), 1);
@@ -169,6 +186,9 @@ for modelIndex = 1:numel(modelSequences)
             jsonsFolder = [jsonFolder, modelSequence, '/pose/', openPoseModel, '/', subFolders{subFolderId}];
         else
             jsonsFolder = [jsonFolder, modelSequence, '/car/', openPoseModel, '/', subFolders{subFolderId}];
+        end
+        if isPig
+            jsonsFolder = [jsonFolder, modelSequence, '/pig/', openPoseModel, '/', subFolders{subFolderId}];
         end
         jsonFilePaths = getFilesInFolder(jsonsFolder, 'json');
         % Reading files
@@ -187,7 +207,7 @@ for modelIndex = 1:numel(modelSequences)
         numberFiles(subFolderId) = numel(resFiles);
         % Body
         % avgPrecAndRecall = {AP_1}{AR_1}{AP_2}{AR_2}...
-        if ~isCar
+        if ~isCar && ~isPig
             % avgPrecAndRecall = {AP_b}{AR_b}{AP_f}{AR_f}
             if subFolderId < 3
                 avgPrecAndRecallI = getPrecisionAndRecall(resFiles, cocoGt, type);
@@ -243,7 +263,7 @@ for modelIndex = 1:numel(modelSequences)
                 end
             end
         % Car
-        else
+        elseif ~isPig
             % avgPrecAndRecall = {AP_cf}{AR_cf}{AP_p3}{AR_p3}{AP_v7}{AR_v7}
             if numel(subFolders{subFolderId}) >= 7
                 if norm(subFolders{subFolderId}(1:7)-'scaleCF') == 0
@@ -259,6 +279,11 @@ for modelIndex = 1:numel(modelSequences)
             subIndex = 1*(subFolderId<4) + 2*(subFolderId>3);
             avgPrecAndRecall{2*(subFolderId-1)+1}{subIndex} = avgPrecAndRecallI{1};
             avgPrecAndRecall{2*(subFolderId-1)+2}{subIndex} = avgPrecAndRecallI{2};
+        % Pig
+        else
+            avgPrecAndRecallI = getPrecisionAndRecall(resFiles, cocoPig, type);
+            avgPrecAndRecall{2*(subFolderId-1)+1} = avgPrecAndRecallI{1};
+            avgPrecAndRecall{2*(subFolderId-1)+2} = avgPrecAndRecallI{2};
         end
     end
 
@@ -267,7 +292,7 @@ for modelIndex = 1:numel(modelSequences)
     lineWidth = 3;
     figure(modelIndex),
     subplots = numel(avgPrecAndRecall);
-    if ~isCar && subplots == 4 && numel(avgPrecAndRecall{3}{1}) == 0
+    if ~isCar && ~isPig && subplots == 4 && numel(avgPrecAndRecall{3}{1}) == 0
         subplots = 2;
     end
     for plotIndex = 1:subplots
@@ -289,9 +314,9 @@ for modelIndex = 1:numel(modelSequences)
                 yLabelShort = 'AR';
             end
                 % Body
-                if plotIndex == 1 || (mod(plotIndex, 2) == 1 && isCar)
+                if plotIndex == 1 || (mod(plotIndex, 2) == 1 && (isCar || isPig) )
                     yLabel = 'Average Precision';
-                elseif plotIndex == 2 || (mod(plotIndex, 2) == 0 && isCar)
+                elseif plotIndex == 2 || (mod(plotIndex, 2) == 0 && (isCar || isPig) )
                     yLabel = 'Average Recall';
                 % Foot
                 elseif plotIndex == 3
@@ -318,7 +343,7 @@ for modelIndex = 1:numel(modelSequences)
                     yLabel = 'HandMPII AR';
                 end
             maxOPIndex = mod(plotIndex-1, 2)+1;
-            if ~isCar
+            if ~isCar && ~isPig
                 % Body
                 if plotIndex <= 2
                     avgMax1 = avgPrecAndRecallOP1{maxOPIndex};
