@@ -47,16 +47,21 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
             or "car14" in jsonData[index]['dataset'] \
             or "pig" in jsonData[index]['dataset'] \
             or "car22" in jsonData[index]['dataset']:
-            if "COCO" in jsonData[index]['dataset'] or isBodyMpii or "car22" in jsonData[index]['dataset']:
+            if "COCO" in jsonData[index]['dataset'] or isBodyMpii or "car22" or "pig" in jsonData[index]['dataset']:
                 if not maskFolder:
                     maskFolder = imagesFolder
                 # Car22
-                if isBodyMpii or "car22" in jsonData[index]['dataset']:
-                    if isBodyMpii:
+                if isBodyMpii or "car22" in jsonData[index]['dataset'] or "pig" in jsonData[index]['dataset']:
+                    if isBodyMpii or "pig" in jsonData[index]['dataset']:
                         imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths'])
                     else:
                         imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths'][1:])
+                    
                     maskFileName = os.path.splitext(os.path.split(jsonData[index]['img_paths'])[1])[0]
+
+                    if "pig" in jsonData[index]['dataset']: # if pigVersion >= 2.4, mask name is '0001.png'
+                        maskFileName = '%04d' % int(maskFileName)
+                        
                     maskMissFullPath = maskFolder + maskFileName + '.png'
                 else:
                     imageIndex = jsonData[index]['img_paths'][-16:-4]
@@ -82,7 +87,7 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
                 if not os.path.exists(maskMissFullPath):
                     raise Exception('Not found image: ' + maskMissFullPath)
                 maskMiss = cv2.imread(maskMissFullPath, 0) # 0 = Load grayscale image
-            # MPII or car14 or Pig
+            # MPII or car14 or pig (v1)
             else:
                 imageFullPath = os.path.join(imagesFolder, jsonData[index]['img_paths'])
                 image = cv2.imread(imageFullPath)
@@ -267,7 +272,8 @@ def generateLmdbFile(lmdbPath, imagesFolder, jsonFile, caffePythonPath, maskFold
             or "hand42" in jsonData[index]['dataset'] \
             or isBodyMpii \
             or "car22" in jsonData[index]['dataset'] \
-            or "face70_mask_out" in jsonData[index]['dataset']:
+            or "face70_mask_out" in jsonData[index]['dataset'] \
+            or "pig" in jsonData[index]['dataset']:
             dataToSave = np.concatenate((image, metaData, maskMiss[...,None]), axis=2)
             dataToSave = np.transpose(dataToSave, (2, 0, 1))
         elif "face70" in jsonData[index]['dataset'] \

@@ -4,7 +4,7 @@ import os
 from generateProtoTxt import generateProtoTxt
 from math import floor, ceil
 
-sCaffeFolder =  '/home/maxime/Documents/openpose_caffe_train/'
+sCaffeFolder =  '/home/user1/Documents/openpose_caffe_train/'
 sDatasetFolder = '../dataset/'
 sLmdbFolders = ['lmdb_coco/']
 sProbabilities = "1.0"
@@ -41,7 +41,7 @@ sAddDome = 0
 sAddExtraPAFs = False # Extra PAFs? (BODY_25E, BODY_23)
 # carVersion = 1
 carVersion = 0
-pigVersion = 1
+pigVersion = 4 # no background/masks = 1, with background = 2, other dataset (3stk) + masks = 3
 # pigVersion = 0
 # sAddDistance = 1
 sAddDistance = 0
@@ -174,10 +174,33 @@ if pigVersion > 0:
     sBodyParts = 5
     sBodyPAFs = 2*(sBodyParts-1)
     sModelNames = ['PIG_' + str(sBodyParts)]
-    sLmdbFolders = ['lmdb_pig5_v1/']
-    sLmdbBackground = 'lmdb_background/'
-    sProbabilities  = "0.98"
-    sBatchSizes = [1]
+    if pigVersion == 1:
+        sLmdbFolders = ['lmdb_pig5_21/']
+        sLmdbBackground = ''
+        sProbabilities  = "1"
+        sProbabilityOnlyBackground = "0"
+        sBatchSizes = [1]
+    elif pigVersion == 2:
+        sLmdbFolders = ['lmdb_pig5_v1/']
+        sLmdbBackground = 'lmdb_background/'
+        sProbabilities  = "0.98"
+        sProbabilityOnlyBackground = 0.02
+        sBatchSizes = [6]
+    elif pigVersion == 3:
+        sLmdbFolders = ['lmdb_pig5_v3/']
+        sLmdbBackground = 'lmdb_background/'
+        sProbabilities  = "0.98"
+        sProbabilityOnlyBackground = 0.02
+        sBatchSizes = [6]
+    elif pigVersion == 4:
+        sLmdbFolders = ['lmdb_pig5_v3/']
+        sLmdbBackground = ''
+        sProbabilities  = "1"
+        sProbabilityOnlyBackground = 0
+        sBatchSizes = [6]
+        sMaxDegreeRotations = [45]
+        sScaleMins = [1.0]
+        sScaleMaxs = [1.0]
 
 
 partsStr = str(sBodyParts)
@@ -262,7 +285,8 @@ if sLmdbBackground:
 sPretrainedModelPath = os.path.abspath(sPretrainedModelPath)
 sTrainingFolder = os.path.abspath(sTrainingFolder)
 
-sBodyPartsAndBkg = sBodyParts+1*(not sAddMpii)
+sBodyPartsAndBkg = sBodyParts+1*(False)
+# sBodyPartsAndBkg = sBodyParts+1*(not sAddMpii)
 
 ## Things to try:
 # 1. Different batch size --> 20
@@ -652,11 +676,11 @@ if __name__ == "__main__":
         print "sBodyPAFs = " + str(sBodyPAFs) 
         print "sHandParts = " + str(sHandParts) 
         print "sHandPAFs = " + str(sHandPAFs) 
-        print "not sAddMpii " + str(not sAddMpii)
+        print "Background ? " + str(pigVersion > 1)
 
         generateProtoTxt(
             trainingFolder, sBatchSizes, layerName, kernel, stride, numberOutputChannels,
             transformParams, sLearningRateInit, trainedModelsFolder, sBodyParts, sBodyPAFs,
             sBatchNorm, sBinaryConv, sLearningRateMultDistro, sCaffeFolder, pretrainedModelPath,
             isFinalModel, numberIterations, maximumPafStage, sUsePReLU, extraGT, sHandParts, sHandPAFs,
-            sDistanceChannels, not sAddMpii)
+            sDistanceChannels, False)

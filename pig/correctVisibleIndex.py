@@ -1,7 +1,9 @@
 import json, tqdm
 
-final = "annotations_final.json"
-exported = "annotations_final_v1.json"
+dataFolder = "../dataset/PigData/"
+
+final = dataFolder + "annotations_final_v2.2.json"
+exported = dataFolder + "annotations_final_v2.4.json"
 
 
 with open(final) as file:

@@ -56,10 +56,10 @@ Depending on the kind of model you are trying to learn, use the following traini
                 5. Run `python c_generateLmdbs.py` again to generate the MPII LMDB.
 2. Train model:
     - a) Download and compile our modified Caffe:
-        - OpenPose Caffe Training: [github.com/CMU-Perceptual-Computing-Lab/openpose_caffe_train](https://github.com/CMU-Perceptual-Computing-Lab/openpose_caffe_train).
+        - OpenPose Caffe Training: [github.com/Minipeps/openpose_caffe_train](https://github.com/Minipeps/openpose_caffe_train).
         - Compile it by running: `make all -j{num_cores} && make pycaffe -j{num_cores}`.
     - b) Generate the Caffe ProtoTxt and shell file for training by running `python d_setLayers.py`.
-        - Set `sCaffeFolder` to the path of [OpenPose Caffe Train](https://github.com/CMU-Perceptual-Computing-Lab/openpose_caffe_train).
+        - Set `sCaffeFolder` to the path of [OpenPose Caffe Train with PIG_5 model](https://github.com/Minipeps/openpose_caffe_train).
         - Set `sAddFoot` to 1 or 0 to enable/disable combined body-foot.
         - Set `sAddMpii`, `sAddFace` and `sAddHands` to 1 or 0 to enable/disable boyd mpii/face/hands (if 1, then all the above must be also 1).
         - Set `sAddDome` to 1 or 0 to enable/disable the Dome whole-body dataset (if 1, then all the above must be also 1).

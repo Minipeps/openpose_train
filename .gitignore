@@ -139,12 +139,12 @@ training_results*/
 !experimental_models/*/training_results*/
 
 ######################### Default Example Files #########################
-*_generateLmdbs.py
-a_copyModels.sh
-b_getCocoJsons.sh
-b_getCocoJsons*.sh
-d_setLayers.py
-!experimental_models/*/*/d_setLayers.py
+# *_generateLmdbs.py
+# a_copyModels.sh
+# b_getCocoJsons.sh
+# b_getCocoJsons*.sh
+# d_setLayers.py
+# !experimental_models/*/*/d_setLayers.py
 
 ######################### Caffe Models #########################
 *.caffemodel
