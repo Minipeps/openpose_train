@@ -6,8 +6,8 @@ echo "Parameters to change"
 # NUMBER_FOLDER=
 # NUMBER=${NUMBER_FOLDER}
 EXPERIMENT=pig5_v4
-# IMAGE_DIR=D:/Documents/Programmation/openpose_train/dataset/PigData/test/
-IMAGE_DIR=D:/Documents/Programmation/openpose_train/dataset/PigData/duroc_10stk/RGB/
+# IMAGE_DIR=D:/Documents/Programmation/openpose_train/dataset/PigData/validation_10stk/
+IMAGE_DIR=D:/Documents/Programmation/openpose_train/dataset/PigData/duroc_3stk/RGB/
 # IMAGE_DIR_CF="/home/gines/devel/images/car-fusion_val/"
 # IMAGE_DIR_P3="/home/gines/devel/images/pascal3d+_val/"
 # IMAGE_DIR_V7="/home/gines/devel/images/veri-776_val/"
@@ -43,7 +43,7 @@ MODEL_FOLDER=$(dirname $(dirname ${SHARED_FOLDER}))/
 pwd
 cd $OPENPOSE_FOLDER
 # Sorted in natural order (NAT sort)
-modelPath=${SHARED_FOLDER}/pose_iter_222000.caffemodel
+modelPath=${SHARED_FOLDER}/pose_iter_124000.caffemodel
 # Not NAT sort
 # for modelPath in ${SHARED_FOLDER}*.caffemodel; do
 # temporaryModel=$(dirname ${modelPath})/${OPENPOSE_MODEL_FILE_NAME}
@@ -57,11 +57,26 @@ mv $modelPath $temporaryModel
 # Processing
 # ./build/examples/openpose/openpose.bin \
 # build/x64/Release/OpenPoseDemo.exe \
-#     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --video "D:\Downloads\duroc6stk-frames1000to1999-crf25.mp4" \
-#     --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc6stk-frames1000to1999-crf25-OUT.avi" --write_video_fps -1
+#     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --video ${IMAGE_DIR}"duroc-6stk-crf21.mp4" \
+#     --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc-6stk-crf21-OUT.avi" --write_video_fps -1
+# build/x64/Release/OpenPoseDemo.exe \
+#     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --video ${IMAGE_DIR}"duroc-6stk-crf23.mp4" \
+#     --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc-6stk-crf23-OUT.avi" --write_video_fps -1
+# build/x64/Release/OpenPoseDemo.exe \
+#     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --video ${IMAGE_DIR}"duroc-6stk-crf25.mp4" \
+#     --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc-6stk-crf25-OUT.avi" --write_video_fps -1
+# build/x64/Release/OpenPoseDemo.exe \
+#     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --video ${IMAGE_DIR}"duroc-6stk-crf27.mp4" \
+#     --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc-6stk-crf27-OUT.avi" --write_video_fps -1
+# build/x64/Release/OpenPoseDemo.exe \
+#     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --video ${IMAGE_DIR}"duroc-6stk-crf29.mp4" \
+#     --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc-6stk-crf29-OUT.avi" --write_video_fps -1
+# build/x64/Release/OpenPoseDemo.exe \
+#     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --image_dir ${IMAGE_DIR} \
+#     --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc3stk-test.avi" --write_video_fps 15
 build/x64/Release/OpenPoseDemo.exe \
     --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --image_dir ${IMAGE_DIR} \
-    --render_pose 2 --display 2 --num_gpu -1 --write_video "D:/Downloads/duroc6stk-frames1000to1999-uncompressed-OUTv3.avi" --write_video_fps 25
+    --render_pose 2 --display 2 --num_gpu -1
 # Move JSON after finished (so no Dropbox updating all the time)
 
 # Rename back to original name

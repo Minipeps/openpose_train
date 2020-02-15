@@ -7,34 +7,28 @@ echo "Parameters to change"
 # NUMBER=${NUMBER_FOLDER}
 EXPERIMENT=pig5_v4
 IMAGE_DIR=D:/Documents/Programmation/openpose_train/dataset/PigData/validation/
-# IMAGE_DIR_CF="/home/gines/devel/images/car-fusion_val/"
-# IMAGE_DIR_P3="/home/gines/devel/images/pascal3d+_val/"
-# IMAGE_DIR_V7="/home/gines/devel/images/veri-776_val/"
+IMAGE_DIR_3STK=D:/Documents/Programmation/openpose_train/dataset/PigData/validation_3stk/
+IMAGE_DIR_6STK=D:/Documents/Programmation/openpose_train/dataset/PigData/validation_6stk/
+IMAGE_DIR_10STK=D:/Documents/Programmation/openpose_train/dataset/PigData/validation_10stk/
 
 # echo "Common parameters to both files a_*.sh and b_*.sh"
 SHARED_FOLDER=D:/Documents/Programmation/openpose_train/training_results/${EXPERIMENT}/pig/pig_5/
-# SHARED_FOLDER=/media/posefs3b/Users/gines/openpose_train/training_results/${EXPERIMENT}/car/car_${NUMBER}/
 # echo " "
 
 echo "Paths"
 OPENPOSE_MODEL=PIG_5
 OPENPOSE_MODEL_FILE_NAME=pose_iter_XXXXXX.caffemodel
 OPENPOSE_FOLDER=D:/Documents/Programmation/openpose/
-# OPENPOSE_FOLDER=/home/gines/Dropbox/Perceptual_Computing_Lab/openpose/openpose/
 
 JSON_FOLDER_1=${SHARED_FOLDER}scale_1/
-# JSON_FOLDER_CF_1=${SHARED_FOLDER}scaleCF_1/
-# JSON_FOLDER_P3_1=${SHARED_FOLDER}scaleP3_1/
-# JSON_FOLDER_V7_1=${SHARED_FOLDER}scaleV7_1/
-JSON_FOLDER_4=${SHARED_FOLDER}scale_4/
-# JSON_FOLDER_P3_4=${SHARED_FOLDER}scaleP3_4/
-# JSON_FOLDER_V7_4=${SHARED_FOLDER}scaleV7_4/
+JSON_FOLDER_3stk=${SHARED_FOLDER}3stk/
+JSON_FOLDER_6stk=${SHARED_FOLDER}6stk/
+JSON_FOLDER_10stk=${SHARED_FOLDER}10stk/
+
 mkdir $JSON_FOLDER_1
-# mkdir $JSON_FOLDER_P3_1
-# mkdir $JSON_FOLDER_V7_1
-# mkdir $JSON_FOLDER_4
-# mkdir $JSON_FOLDER_P3_4
-# mkdir $JSON_FOLDER_V7_4
+mkdir $JSON_FOLDER_3stk
+mkdir $JSON_FOLDER_6stk
+mkdir $JSON_FOLDER_10stk
 echo " "
 
 # echo "Sleeping for 8h..."
@@ -64,25 +58,19 @@ for modelPath in `ls -v ${SHARED_FOLDER}*.caffemodel`; do
     modelName=$(basename ${modelPath})
     temporaryJsonFile=${SHARED_FOLDER}/temporaryJson_${EXPERIMENT}_${modelName}.json
     finalJsonFile1=${JSON_FOLDER_1}${modelName}_1.json
-    # finalJsonFileP31=${JSON_FOLDER_P3_1}${modelName}_1.json
-    # finalJsonFileV71=${JSON_FOLDER_V7_1}${modelName}_1.json
-    finalJsonFile4=${JSON_FOLDER_4}${modelName}_4.json
-    # finalJsonFileP34=${JSON_FOLDER_P3_4}${modelName}_4.json
-    # finalJsonFileV74=${JSON_FOLDER_V7_4}${modelName}_4.json
+    finalJsonFile3stk=${JSON_FOLDER_3stk}${modelName}_3stk.json
+    finalJsonFile6stk=${JSON_FOLDER_6stk}${modelName}_6stk.json
+    finalJsonFile10stk=${JSON_FOLDER_10stk}${modelName}_10stk.json
 
     echo "Processing $modelName in $EXPERIMENT"
-    # JSON file does exist (already created)
-    # if [ -f $finalJsonFileCF1 ]; then
-    # if [ -f $finalJsonFileCF1 ] && [ -f $finalJsonFileP31 ] && [ -f $finalJsonFileV71 ] && [ -f $finalJsonFileCF4 ]; then
-    # rm $finalJsonFile1
 
-    if [ -f $finalJsonFile1 ] && [ -f $finalJsonFile4 ]; then
+    if [ -f $finalJsonFile1 ] && [ -f $finalJsonFile3stk ] && [ -f $finalJsonFile6stk ] && [ -f $finalJsonFile10stk ]; then
         echo "JSONs files already exists!"
     else
         # Rename file to OpenPose name
         mv $modelPath $temporaryModel
         
-        # 1 scale
+        # 1 scale / validation
         if [ -f $finalJsonFile1 ]; then
             echo "JSON scale-1 file already exists!"
         # JSON file does not exist
@@ -91,23 +79,49 @@ for modelPath in `ls -v ${SHARED_FOLDER}*.caffemodel`; do
             # ./build/examples/openpose/openpose.bin \
             build/x64/Release/OpenPoseDemo.exe \
                 --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --image_dir ${IMAGE_DIR} \
-                --write_coco_json_variants 1 --write_coco_json $temporaryJsonFile --render_pose 2 --display 2 --num_gpu -1
+                --write_coco_json_variants 1 --write_coco_json $temporaryJsonFile --render_pose 0 --display 0 --num_gpu -1
             # Move JSON after finished (so no Dropbox updating all the time)
             mv $temporaryJsonFile $finalJsonFile1
         fi
-        # # 4 scale
-        # if [ -f $finalJsonFile4 ]; then
-        #     echo "JSON file already exists!"
-        # # JSON file does not exist
-        # else
-        #     # Processing
-        #     # ./build/examples/openpose/openpose.bin \
-        #     build/x64/Release/OpenPoseDemo.exe \
-        #         --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --image_dir ${IMAGE_DIR} \
-        #         --write_coco_json_variants 1 --write_coco_json $temporaryJsonFile --render_pose 2 --display 2 --num_gpu -1
-        #     # Move JSON after finished (so no Dropbox updating all the time)
-        #     mv $temporaryJsonFile $finalJsonFile4
-        # fi
+        # duroc_3stk
+        if [ -f $finalJsonFile3stk ]; then
+            echo "JSON file already exists!"
+        # JSON file does not exist
+        else
+            # Processing
+            # ./build/examples/openpose/openpose.bin \
+            build/x64/Release/OpenPoseDemo.exe \
+                --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --image_dir ${IMAGE_DIR_3STK} \
+                --write_coco_json_variants 1 --write_coco_json $temporaryJsonFile --render_pose 0 --display 0 --num_gpu -1
+            # Move JSON after finished (so no Dropbox updating all the time)
+            mv $temporaryJsonFile $finalJsonFile3stk
+        fi
+        # duroc_6stk
+        if [ -f $finalJsonFile6stk ]; then
+            echo "JSON file already exists!"
+        # JSON file does not exist
+        else
+            # Processing
+            # ./build/examples/openpose/openpose.bin \
+            build/x64/Release/OpenPoseDemo.exe \
+                --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --image_dir ${IMAGE_DIR_6STK} \
+                --write_coco_json_variants 1 --write_coco_json $temporaryJsonFile --render_pose 0 --display 0 --num_gpu -1
+            # Move JSON after finished (so no Dropbox updating all the time)
+            mv $temporaryJsonFile $finalJsonFile6stk
+        fi
+        # duroc_10stk
+        if [ -f $finalJsonFile10stk ]; then
+            echo "JSON file already exists!"
+        # JSON file does not exist
+        else
+            # Processing
+            # ./build/examples/openpose/openpose.bin \
+            build/x64/Release/OpenPoseDemo.exe \
+                --model_folder ${MODEL_FOLDER} --model_pose ${OPENPOSE_MODEL} --image_dir ${IMAGE_DIR_10STK} \
+                --write_coco_json_variants 1 --write_coco_json $temporaryJsonFile --render_pose 0 --display 0 --num_gpu -1
+            # Move JSON after finished (so no Dropbox updating all the time)
+            mv $temporaryJsonFile $finalJsonFile10stk
+        fi
 
         # Rename back to original name
         mv $temporaryModel $modelPath
