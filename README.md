@@ -1,3 +1,7 @@
+# _PIG_5_ Model
+
+This model extends the OpenPose code with a new model, _PIG_5_, trained with image sequences of pig pens viewed from the top. A history of the project and download link for the pre-trained model can be read [here](versionHistory.md).
+
 # OpenPose Training
 
 <div align="center">
